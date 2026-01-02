@@ -474,7 +474,35 @@ const analyzeWithAI = async (type) => {
             Upgrade your plan
           </a>
         </div>
-         {/* LOGOUT CONFIRM MODAL */}
+        
+
+        {/* User Profile */}
+<div className="p-3 border-t border-[#1e1e3a]">
+  <div className="flex items-center gap-3">
+    <div className="w-8 h-8 rounded-full bg-gradient-to-br from-[#8b5cf6] to-[#f472b6] flex items-center justify-center text-white text-sm font-medium">
+      {firstName.charAt(0).toUpperCase()}
+    </div>
+
+    <div className="flex-1 min-w-0">
+      <p className="text-white text-sm font-medium truncate">
+        {user?.firstName}'s Team
+      </p>
+      <p className="text-[#64648c] text-xs truncate">
+        {user?.email}
+      </p>
+    </div>
+  <button
+  onClick={() => setShowLogoutConfirm(true)}
+  className="text-[#64648c] hover:text-red-400 text-xs"
+>
+  Logout
+</button>
+
+  </div>
+</div>
+
+      </div>
+       {/* LOGOUT CONFIRM MODAL */}
             {showLogoutConfirm && (
               <div className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/60">
                 <div className="bg-white rounded-xl w-[360px] p-6 shadow-xl">
@@ -504,33 +532,6 @@ const analyzeWithAI = async (type) => {
               </div>
             )}
 
-
-        {/* User Profile */}
-<div className="p-3 border-t border-[#1e1e3a]">
-  <div className="flex items-center gap-3">
-    <div className="w-8 h-8 rounded-full bg-gradient-to-br from-[#8b5cf6] to-[#f472b6] flex items-center justify-center text-white text-sm font-medium">
-      {firstName.charAt(0).toUpperCase()}
-    </div>
-
-    <div className="flex-1 min-w-0">
-      <p className="text-white text-sm font-medium truncate">
-        {user?.firstName}'s Team
-      </p>
-      <p className="text-[#64648c] text-xs truncate">
-        {user?.email}
-      </p>
-    </div>
-  <button
-  onClick={() => setShowLogoutConfirm(true)}
-  className="text-[#64648c] hover:text-red-400 text-xs"
->
-  Logout
-</button>
-
-  </div>
-</div>
-
-      </div>
          {/* Main Content */}
        <div className="flex-1 overflow-y-auto ">
 
