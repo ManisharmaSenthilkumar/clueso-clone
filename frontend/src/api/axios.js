@@ -6,7 +6,7 @@ const api = axios.create({
 
 // ✅ REQUEST INTERCEPTOR (attach token)
 api.interceptors.request.use((config) => {
-  const token = sessionStorage.getItem("token");
+  const token = sessionStorage.getItem("token"); // ✅ FIXED
 
   if (token) {
     config.headers.Authorization = `Bearer ${token}`;
@@ -19,10 +19,20 @@ api.interceptors.request.use((config) => {
 api.interceptors.response.use(
   (res) => res,
   (err) => {
-    // 🔕 TEMP: DO NOT FORCE LOGOUT
+    const isAuthRoute =
+      err.config?.url?.includes("/auth/login") ||
+      err.config?.url?.includes("/auth/signup");
+
+   if (err.response?.status === 401 && !isAuthRoute) {
+  sessionStorage.clear();     // ✅ FIXED
+  window.location.href = "/";
+}
+
+
     return Promise.reject(err);
   }
 );
+
 
 
 

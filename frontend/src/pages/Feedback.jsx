@@ -4,27 +4,22 @@ import { createFeedback, fetchFeedback } from "../features/feedback/feedback.api
 import { useNavigate } from "react-router-dom";
 
 
-
-
-
-
-
 const Feedback = () => {
-   const navigate = useNavigate();
-const [user, setUser] = useState(null);
+  const navigate = useNavigate();
+  const [user, setUser] = useState(null);
 
-useEffect(() => {
-  const token = sessionStorage.getItem("token");
-  const storedUser = sessionStorage.getItem("user");
+  useEffect(() => {
+    const token = sessionStorage.getItem("token");
+    const storedUser = sessionStorage.getItem("user");
 
-  if (!token || !storedUser) {
-    navigate("/");
-    return;
-  }
+    if (!token || !storedUser) {
+      navigate("/");
+      return;
+    }
 
-  setUser(JSON.parse(storedUser));
-}, []);
- 
+    setUser(JSON.parse(storedUser));
+  }, []);
+
   const firstName = user?.firstName || "User";
   const lastName = user?.lastName || "";
   const email = user?.email || "unknown@email.com";
@@ -36,24 +31,29 @@ useEffect(() => {
   const [description, setDescription] = useState("");
   const [feedbackList, setFeedbackList] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
- const [selectedFeedback, setSelectedFeedback] = useState(null);
+  const [selectedFeedback, setSelectedFeedback] = useState(null);
+const [showLogoutConfirm, setShowLogoutConfirm] = useState(false);
 
-
-
-const navRoutes = {
-  Home: "/dashboard",
-  "All Projects": "/dashboard",
-  "Video Templates": "/dashboard",
-  "Auto-update": "/dashboard",
-  Team: "/dashboard",
-  Analytics: "/dashboard",
-  Feedback: "/feedback",
-  "Feedback insights": "/insights",
-  Settings: "/settings",
-  Trash: "/trash",
+const handleLogoutConfirm = () => {
+  sessionStorage.clear();   // ✅ FIXED
+  navigate("/");
 };
 
-  
+
+  const navRoutes = {
+    Home: "/dashboard",
+    "All Projects": "/dashboard",
+    "Video Templates": "/dashboard",
+    "Auto-update": "/dashboard",
+    Team: "/dashboard",
+    Analytics: "/dashboard",
+    Feedback: "/feedback",
+    "Feedback insights": "/insights",
+    Settings: "/settings",
+    Trash: "/trash",
+  };
+
+
   const loadFeedback = async () => {
     setIsLoading(true);
     try {
@@ -101,26 +101,26 @@ const navRoutes = {
     { name: "Settings", icon: "settings" },
     { name: "Trash", icon: "trash" },
   ];
-const formatDateTime = (dateStr) => {
-  if (!dateStr) return "N/A";
+  const formatDateTime = (dateStr) => {
+    if (!dateStr) return "N/A";
 
-  // 👇 Force UTC parsing
-  const date = new Date(dateStr + "Z");
+    // 👇 Force UTC parsing
+    const date = new Date(dateStr + "Z");
 
-  const datePart = date.toLocaleDateString("en-IN", {
-    year: "numeric",
-    month: "long",
-    day: "numeric",
-  });
+    const datePart = date.toLocaleDateString("en-IN", {
+      year: "numeric",
+      month: "long",
+      day: "numeric",
+    });
 
-  const timePart = date.toLocaleTimeString("en-IN", {
-    hour: "2-digit",
-    minute: "2-digit",
-    hour12: true,
-  });
+    const timePart = date.toLocaleTimeString("en-IN", {
+      hour: "2-digit",
+      minute: "2-digit",
+      hour12: true,
+    });
 
-  return `${datePart} • ${timePart}`;
-};
+    return `${datePart} • ${timePart}`;
+  };
 
 
 
@@ -284,16 +284,15 @@ const formatDateTime = (dateStr) => {
             {mainNavItems.map((item) => (
               <li key={item.name}>
                 <button
-  onClick={() => navigate(navRoutes[item.name])}
-  className={`w-full text-left flex items-center gap-3 px-3 py-2 rounded-lg text-sm transition-colors ${
-    location.pathname === navRoutes[item.name]
-      ? "text-white bg-[#1e1e3a] border-r-2 border-[#f472b6]"
-      : "text-[#94a3b8] hover:text-white hover:bg-[#1e1e3a]/50"
-  }`}
->
-  {renderIcon(item.icon, "w-5 h-5")}
-  {item.name}
-</button>
+                  onClick={() => navigate(navRoutes[item.name])}
+                  className={`w-full text-left flex items-center gap-3 px-3 py-2 rounded-lg text-sm transition-colors ${location.pathname === navRoutes[item.name]
+                      ? "text-white bg-[#1e1e3a] border-r-2 border-[#f472b6]"
+                      : "text-[#94a3b8] hover:text-white hover:bg-[#1e1e3a]/50"
+                    }`}
+                >
+                  {renderIcon(item.icon, "w-5 h-5")}
+                  {item.name}
+                </button>
 
               </li>
             ))}
@@ -306,12 +305,11 @@ const formatDateTime = (dateStr) => {
             {bottomNavItems.map((item) => (
               <li key={item.name}>
                 <button
-  onClick={() => navigate(navRoutes[item.name] || "/dashboard")}
-  className={`w-full text-left flex items-center gap-3 px-3 py-2 rounded-lg text-sm transition-colors ${
-    item.active
-      ? "text-white bg-[#1e1e3a] border-r-2 border-[#f472b6]"
-      : "text-[#94a3b8] hover:text-white hover:bg-[#1e1e3a]/50"
-  }`}
+                  onClick={() => navigate(navRoutes[item.name] || "/dashboard")}
+                  className={`w-full text-left flex items-center gap-3 px-3 py-2 rounded-lg text-sm transition-colors ${item.active
+                      ? "text-white bg-[#1e1e3a] border-r-2 border-[#f472b6]"
+                      : "text-[#94a3b8] hover:text-white hover:bg-[#1e1e3a]/50"
+                    }`}
 
                 ></button>
               </li>
@@ -331,35 +329,61 @@ const formatDateTime = (dateStr) => {
         </div>
 
         {/* User Profile */}
-<div className="p-3 border-t border-[#1e1e3a]">
-  <div className="flex items-center gap-3">
-    <div className="w-8 h-8 rounded-full bg-gradient-to-br from-[#8b5cf6] to-[#f472b6] flex items-center justify-center text-white text-sm font-medium">
-      {firstName.charAt(0).toUpperCase()}
-    </div>
+        <div className="p-3 border-t border-[#1e1e3a]">
+          <div className="flex items-center gap-3">
+            <div className="w-8 h-8 rounded-full bg-gradient-to-br from-[#8b5cf6] to-[#f472b6] flex items-center justify-center text-white text-sm font-medium">
+              {firstName.charAt(0).toUpperCase()}
+            </div>
 
-    <div className="flex-1 min-w-0">
-      <p className="text-white text-sm font-medium truncate">
-        {user?.firstName}'s Team
-      </p>
-      <p className="text-[#64648c] text-xs truncate">
-        {user?.email}
-      </p>
-    </div>
+            <div className="flex-1 min-w-0">
+              <p className="text-white text-sm font-medium truncate">
+                {user?.firstName}'s Team
+              </p>
+              <p className="text-[#64648c] text-xs truncate">
+                {user?.email}
+              </p>
+            </div>
 
-   <button
-  onClick={() => {
-    localStorage.removeItem("token");
-    navigate("/");
-  }}
+            <button
+  onClick={() => setShowLogoutConfirm(true)}
   className="text-[#64648c] hover:text-red-400 text-xs"
 >
   Logout
 </button>
 
-  </div>
-</div>
+          </div>
+        </div>
 
       </div>
+        {/* LOGOUT CONFIRM MODAL */}
+            {showLogoutConfirm && (
+              <div className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/60">
+                <div className="bg-white rounded-xl w-[360px] p-6 shadow-xl">
+                  <h3 className="text-lg font-semibold text-gray-800 mb-2">
+                    Confirm Logout
+                  </h3>
+                  <p className="text-sm text-gray-600 mb-6">
+                    Are you sure you want to log out?
+                  </p>
+
+                  <div className="flex justify-end gap-3">
+                    <button
+                      onClick={() => setShowLogoutConfirm(false)}
+                      className="px-4 py-2 text-sm rounded-md border border-gray-300 text-gray-700 hover:bg-gray-100"
+                    >
+                      Cancel
+                    </button>
+
+                    <button
+                      onClick={handleLogoutConfirm}
+                      className="px-4 py-2 text-sm rounded-md bg-red-500 text-white hover:bg-red-600"
+                    >
+                      Logout
+                    </button>
+                  </div>
+                </div>
+              </div>
+            )}
 
       {/* Main Content */}
       <div className="flex-1 overflow-y-auto">
@@ -380,11 +404,10 @@ const formatDateTime = (dateStr) => {
             <div className="flex items-center gap-6">
               <button
                 onClick={() => setActiveTab("all")}
-                className={`text-sm font-medium pb-2 border-b-2 transition-colors ${
-                  activeTab === "all"
+                className={`text-sm font-medium pb-2 border-b-2 transition-colors ${activeTab === "all"
                     ? "text-white border-[#f472b6]"
                     : "text-[#64648c] border-transparent hover:text-white"
-                }`}
+                  }`}
               >
                 All Feedback
                 <span className="ml-2 px-2 py-0.5 rounded-full bg-[#1e1e3a] text-[#94a3b8] text-xs">
@@ -393,11 +416,10 @@ const formatDateTime = (dateStr) => {
               </button>
               <button
                 onClick={() => setActiveTab("open")}
-                className={`text-sm font-medium pb-2 border-b-2 transition-colors ${
-                  activeTab === "open"
+                className={`text-sm font-medium pb-2 border-b-2 transition-colors ${activeTab === "open"
                     ? "text-white border-[#f472b6]"
                     : "text-[#64648c] border-transparent hover:text-white"
-                }`}
+                  }`}
               >
                 Open
                 <span className="ml-2 px-2 py-0.5 rounded-full bg-[#1e1e3a] text-[#94a3b8] text-xs">
@@ -406,11 +428,10 @@ const formatDateTime = (dateStr) => {
               </button>
               <button
                 onClick={() => setActiveTab("resolved")}
-                className={`text-sm font-medium pb-2 border-b-2 transition-colors ${
-                  activeTab === "resolved"
+                className={`text-sm font-medium pb-2 border-b-2 transition-colors ${activeTab === "resolved"
                     ? "text-white border-[#f472b6]"
                     : "text-[#64648c] border-transparent hover:text-white"
-                }`}
+                  }`}
               >
                 Resolved
                 <span className="ml-2 px-2 py-0.5 rounded-full bg-[#1e1e3a] text-[#94a3b8] text-xs">
@@ -438,7 +459,7 @@ const formatDateTime = (dateStr) => {
             {/* Table Header */}
             <div className="grid grid-cols-12 gap-4 px-6 py-4 border-b border-[#1e1e3a] text-[#64648c] text-sm font-medium">
               <div className="col-span-4">Title</div>
-              
+
               <div className="col-span-2">Date</div>
               <div className="col-span-4">Description</div>
               <div className="col-span-2">Status</div>
@@ -457,10 +478,10 @@ const formatDateTime = (dateStr) => {
             {/* Table Body */}
             {!isLoading && feedbackList.map((feedback) => (
               <div
-  key={feedback.id}
-  onClick={() => setSelectedFeedback(feedback)}
-  className="grid grid-cols-12 gap-4 px-6 py-4 border-b border-[#1e1e3a] hover:bg-[#1e1e3a]/30 transition-colors items-center cursor-pointer"
->
+                key={feedback.id}
+                onClick={() => setSelectedFeedback(feedback)}
+                className="grid grid-cols-12 gap-4 px-6 py-4 border-b border-[#1e1e3a] hover:bg-[#1e1e3a]/30 transition-colors items-center cursor-pointer"
+              >
 
                 <div className="col-span-4 flex items-center gap-3">
                   <div className="w-10 h-10 rounded-full bg-gradient-to-br from-[#8b5cf6] to-[#f472b6] flex items-center justify-center text-white font-medium">
@@ -468,14 +489,14 @@ const formatDateTime = (dateStr) => {
                   </div>
                   <div>
                     <p className="text-white font-medium">{feedback.title}</p>
-                     <p className="text-xs text-[#64648c]">
-    by {feedback.author_email}
-  </p>
+                    <p className="text-xs text-[#64648c]">
+                      by {feedback.author_email}
+                    </p>
                   </div>
                 </div>
                 <div className="col-span-2 text-[#94a3b8] text-sm">
-  {formatDateTime(feedback.created_at)}
-</div>
+                  {formatDateTime(feedback.created_at)}
+                </div>
                 <div className="col-span-4 text-[#94a3b8] text-sm truncate">{feedback.description}</div>
                 <div className="col-span-2">
                   <span className={`px-3 py-1 rounded-full text-xs font-medium ${getStatusColor(feedback.status)}`}>
@@ -546,75 +567,76 @@ const formatDateTime = (dateStr) => {
         </div>
       )}
       {selectedFeedback && (
-  <div className="fixed inset-0 bg-black/70 flex items-center justify-center z-50">
-    <div className="bg-[#0c0c1d] border border-[#1e1e3a] rounded-xl w-full max-w-2xl p-6 mx-4">
-      
-      {/* Header */}
-      <div className="flex items-start justify-between mb-4">
-        <div>
-          <h2 className="text-white text-xl font-semibold">
-            {selectedFeedback.title}
-          </h2>
-          <p className="text-sm text-[#64648c] mt-1">
-            by {selectedFeedback.author_email}
-          </p>
+        <div className="fixed inset-0 bg-black/70 flex items-center justify-center z-50">
+          <div className="bg-[#0c0c1d] border border-[#1e1e3a] rounded-xl w-full max-w-2xl p-6 mx-4">
+
+            {/* Header */}
+            <div className="flex items-start justify-between mb-4">
+              <div>
+                <h2 className="text-white text-xl font-semibold">
+                  {selectedFeedback.title}
+                </h2>
+                <p className="text-sm text-[#64648c] mt-1">
+                  by {selectedFeedback.author_email}
+                </p>
+              </div>
+
+              <button
+                onClick={() => setSelectedFeedback(null)}
+                className="text-[#64648c] hover:text-white"
+              >
+                ✕
+              </button>
+            </div>
+
+            {/* Meta Info */}
+            <div className="flex items-center gap-6 text-sm text-[#94a3b8] mb-6">
+
+              <p className="text-xs text-[#64648c] mt-1">
+                Submitted on {formatDateTime(selectedFeedback.created_at)}
+              </p>
+
+
+              <div>
+                <span className="block text-xs uppercase text-[#64648c]">Status</span>
+                <span
+                  className={`inline-block mt-1 px-3 py-1 rounded-full text-xs font-medium ${getStatusColor(
+                    selectedFeedback.status
+                  )}`}
+                >
+                  {selectedFeedback.status}
+                </span>
+              </div>
+            </div>
+
+            {/* Description */}
+            <div>
+              <h3 className="text-white font-medium mb-2">Feedback Details</h3>
+              <div className="bg-[#1e1e3a] border border-[#2a2a4a] rounded-lg p-4 text-[#94a3b8] text-sm leading-relaxed">
+                {selectedFeedback.description}
+              </div>
+            </div>
+          
+
+            {/* Footer actions (future-ready) */}
+            <div className="flex justify-end gap-3 mt-6">
+              <button
+                onClick={() => setSelectedFeedback(null)}
+                className="bg-[#1e1e3a] hover:bg-[#2a2a4a] text-white py-2 px-4 rounded-lg text-sm"
+              >
+                Close
+              </button>
+
+              {/* OWNER ONLY (future) */}
+              {selectedFeedback.status === "open" && (
+                <button className="bg-[#34d399] hover:bg-[#34d399]/90 text-black py-2 px-4 rounded-lg text-sm font-medium">
+                  Mark as Resolved
+                </button>
+              )}
+            </div>
+          </div>
         </div>
-
-        <button
-          onClick={() => setSelectedFeedback(null)}
-          className="text-[#64648c] hover:text-white"
-        >
-          ✕
-        </button>
-      </div>
-
-      {/* Meta Info */}
-      <div className="flex items-center gap-6 text-sm text-[#94a3b8] mb-6">
-       
-        <p className="text-xs text-[#64648c] mt-1">
-  Submitted on {formatDateTime(selectedFeedback.created_at)}
-</p>
-
-
-        <div>
-          <span className="block text-xs uppercase text-[#64648c]">Status</span>
-          <span
-            className={`inline-block mt-1 px-3 py-1 rounded-full text-xs font-medium ${getStatusColor(
-              selectedFeedback.status
-            )}`}
-          >
-            {selectedFeedback.status}
-          </span>
-        </div>
-      </div>
-
-      {/* Description */}
-      <div>
-        <h3 className="text-white font-medium mb-2">Feedback Details</h3>
-        <div className="bg-[#1e1e3a] border border-[#2a2a4a] rounded-lg p-4 text-[#94a3b8] text-sm leading-relaxed">
-          {selectedFeedback.description}
-        </div>
-      </div>
-
-      {/* Footer actions (future-ready) */}
-      <div className="flex justify-end gap-3 mt-6">
-        <button
-          onClick={() => setSelectedFeedback(null)}
-          className="bg-[#1e1e3a] hover:bg-[#2a2a4a] text-white py-2 px-4 rounded-lg text-sm"
-        >
-          Close
-        </button>
-
-        {/* OWNER ONLY (future) */}
-        {selectedFeedback.status === "open" && (
-          <button className="bg-[#34d399] hover:bg-[#34d399]/90 text-black py-2 px-4 rounded-lg text-sm font-medium">
-            Mark as Resolved
-          </button>
-        )}
-      </div>
-    </div>
-  </div>
-)}
+      )}
 
     </div>
   );

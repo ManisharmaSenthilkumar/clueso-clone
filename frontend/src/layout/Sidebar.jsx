@@ -1,14 +1,13 @@
 import { Link } from "react-router-dom";
-import { logout } from "../auth/auth.store";
 
-export default function Sidebar() {
+export default function Sidebar({ onLogoutClick }) {
   return (
     <aside
       style={{
         width: 220,
         background: "#0f172a",
         color: "#fff",
-        padding: 20
+        padding: 20,
       }}
     >
       <h2 style={{ marginBottom: 30 }}>Clueso</h2>
@@ -21,14 +20,15 @@ export default function Sidebar() {
       </nav>
 
       <button
-        onClick={logout}
+        onClick={onLogoutClick}
         style={{
           marginTop: 40,
           background: "#ef4444",
           color: "#fff",
           border: "none",
           padding: 8,
-          cursor: "pointer"
+          cursor: "pointer",
+          borderRadius: 6,
         }}
       >
         Logout
@@ -40,5 +40,5 @@ export default function Sidebar() {
 const linkStyle = {
   color: "#cbd5f5",
   textDecoration: "none",
-  fontSize: 16
+  fontSize: 16,
 };

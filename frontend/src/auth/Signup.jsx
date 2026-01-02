@@ -9,6 +9,8 @@ const SignUp = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
 const [error, setError] = useState("");
+const [confirmPassword, setConfirmPassword] = useState("");
+
 
   const [formData, setFormData] = useState({
     firstName: "",
@@ -29,6 +31,11 @@ const handleSubmit = async (e) => {
     setError(
       "Password must be at least 8 characters and include uppercase, lowercase, number, and special character."
     );
+    return;
+  }
+
+  if (formData.password !== confirmPassword) {
+    setError("Passwords do not match.");
     return;
   }
 
@@ -148,6 +155,37 @@ const handleSubmit = async (e) => {
 
   {error && <p className="text-red-500 text-xs mt-1">{error}</p>}
 </div>
+<div>
+  <label className="block text-sm font-medium mb-1">
+    Retype password
+  </label>
+
+  <div className="relative">
+    <input
+      type={showPassword ? "text" : "password"}
+      value={confirmPassword}
+      onChange={(e) => setConfirmPassword(e.target.value)}
+      required
+      className="h-11 w-full px-3 pr-10 border rounded-lg focus:outline-none focus:ring-2 focus:ring-pink-400"
+    />
+
+    <button
+      type="button"
+      onClick={() => setShowPassword((prev) => !prev)}
+      className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500"
+    >
+      {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+    </button>
+  </div>
+  {confirmPassword &&
+  formData.password !== confirmPassword && (
+    <p className="text-red-500 text-xs mt-1">
+      Passwords do not match
+    </p>
+)}
+
+</div>
+
 
           <button
             type="submit"

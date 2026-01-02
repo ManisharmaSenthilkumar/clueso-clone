@@ -1,16 +1,14 @@
-// frontend/src/auth/auth.store.js
-
 export const setAuth = (token, user) => {
-  localStorage.setItem("token", token);
-  localStorage.setItem("user", JSON.stringify(user));
+  sessionStorage.setItem("token", token);
+  sessionStorage.setItem("user", JSON.stringify(user));
 };
 
 export const getUser = () => {
-  const user = localStorage.getItem("user");
+  const user = sessionStorage.getItem("user");
   return user ? JSON.parse(user) : null;
 };
 
 export const logout = () => {
-  localStorage.clear();
+  sessionStorage.clear();   // ✅ FIXED
   window.location.href = "/";
 };

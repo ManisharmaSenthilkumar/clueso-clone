@@ -4,6 +4,7 @@ import recordScreenImg from "../assets/images/i2.png";
 import uploadVideoImg from "../assets/images/i1.png";
 import uploadSlidesImg from "../assets/images/i3.png";
 import deco from "../assets/images/deco.png";
+import { logout } from "../auth/auth.store";
 
 
 
@@ -12,7 +13,12 @@ const Dashboard = () => {
   const location = useLocation();
   const [activeNav, setActiveNav] = useState("Home");
   const [user, setUser] = useState(null);
-
+  const [showLogoutConfirm, setShowLogoutConfirm] = useState(false);
+  
+const handleLogoutConfirm = () => {
+    logout();
+    navigate("/", { replace: true });
+  };
   // 🔐 PROTECT DASHBOARD (BACKEND MERGE)
   useEffect(() => {
 
@@ -273,6 +279,7 @@ const Dashboard = () => {
           </ul>
         </div>
 
+
         {/* User Profile (BACKEND DATA MERGED) */}
         <div className="border-t border-[#2a2438] p-3">
           <div className="flex items-center gap-3">
@@ -288,7 +295,7 @@ const Dashboard = () => {
               </p>
             </div>
             <button
-              onClick={handleLogout}
+              onClick={()=>setShowLogoutConfirm(true)}
               className="text-xs text-red-400 hover:text-red-300"
             >
               Logout
@@ -581,7 +588,35 @@ const Dashboard = () => {
           </div>
         </div>
       </main>
+        {/* LOGOUT CONFIRM MODAL */}
+{showLogoutConfirm && (
+  <div   className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/60">
+    <div className="bg-white rounded-xl w-[360px] p-6 shadow-xl">
+      <h3 className="text-lg font-semibold text-gray-800 mb-2">
+        Confirm Logout
+      </h3>
+      <p className="text-sm text-gray-600 mb-6">
+        Are you sure you want to log out?
+      </p>
 
+      <div className="flex justify-end gap-3">
+        <button
+          onClick={() => setShowLogoutConfirm(false)}
+          className="px-4 py-2 text-sm rounded-md border border-gray-300 text-gray-700 hover:bg-gray-100"
+        >
+          Cancel
+        </button>
+
+        <button
+          onClick={handleLogoutConfirm}
+          className="px-4 py-2 text-sm rounded-md bg-red-500 text-white hover:bg-red-600"
+        >
+          Logout
+        </button>
+      </div>
+    </div>
+  </div>
+)}
       {/* Chat Button */}
       <button className="fixed bottom-6 right-6 w-14 h-14 bg-[#7c5cff] hover:bg-[#6b4ce0] rounded-full flex items-center justify-center shadow-lg transition-colors">
         <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
